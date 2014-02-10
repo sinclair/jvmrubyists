@@ -1,0 +1,2 @@
+# bohconf Clojure workshop slides
+

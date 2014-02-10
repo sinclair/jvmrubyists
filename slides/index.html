@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>JVM For Rubyists</title>
+
+    <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+    <meta name="author" content="Hakim El Hattab">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/xcode.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+	<script src="lib/js/html5shiv.js"></script>
+	<![endif]-->
+
+    <link rel="stylesheet" href="lib/css/bohconf.css">
+  </head>
+
+  <body>
+
+    <div class="reveal" ng-app="slideshow">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+          <h1>JVM Concepts</h1>
+          <h3>For people who don't want to write java</h3>
+          <small>Created by
+            <a href="http://twitter.com/gtrakgt">Gary Trakhman</a>
+          </small>
+
+        </section>
+        <section>
+          <h2>What We Really Want</h2> 
+          <h3>(speaking for myself..)</h3>
+          
+          <h3 class="pad80"> Tools that let us </h3>
+          <ol>
+            <li>Easily Compose Systems</li>
+            <li>Build quickly</li>
+            <li>Avoid unnecessary risk</li>
+            <li>Easily decompose and reuse components in different arrangements, processes,
+            servers, etc..</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>JVM provides.. holistically</h2>
+          <ol>
+            <li>Performance</li>
+            <li>Stability, low risk</li>
+            <li>Mature tooling </li>
+            <ul>
+              <li>Maven</li>
+              <li>Profilers</li>
+              <li>IDEs</li>
+            </ul>
+            <li>Large open-source community with diverse
+            backgrounds</li>
+            <li>Massive mindshare</li>
+          </ol>
+        </section>
+        <section>
+          <h2>JVM provides.. technically</h2>
+          <ol>
+            <li>An excellent JIT compiler (can be faster-than-C)</li>
+            <li>Multiple, excellent, tuneable garbage collectors</li>
+            <li>Low/No-overhead facilities to fully take advantage of hardware/cpus</li>
+            <li>Runtime code-loading, introspection and other dynamic facilities</li>
+          </ol>
+
+          <small class="pad80">This combination of close-to-the-machine and dynamic
+          facilities makes the JVM...</small>
+        </section>
+        <section>
+          <h2>An Excellent Language Host (did I mention I'm not a fan of java?)</h2>
+          <ol>
+            <li>Clojure</li>
+            <li>Scala</li>
+            <li>JRuby</li>
+            <li>Jython</li>
+            <li>Groovy</li>
+            ...
+          </ol>
+
+          <div>
+            There are many competitive implementations of many types
+            of languages
+          <a href="http://en.wikipedia.org/wiki/List_of_JVM_languages">
+            http://en.wikipedia.org/wiki/List_of_JVM_languages</a>
+          </div>
+        </section>
+
+        <section>
+          <h2>An aside... how many runtime virtual machines actually need to exist?</h2>
+          
+          <ol class="pad20">
+            <li>JS... runs everywhere</li>
+            <li>Java.. been around for a really long time</li>
+          </ol>
+          <div class="pad40">
+            <ul class="pad20">
+              <li>We don't need 500 garbage collectors when we can reuse a
+                good one..</li>
+              <li>Standardizing on a few promotes re-use and lets us focus on
+                getting things done.</li>
+              <li>A lot of the popular languages in use today are
+                similar to each other, and have similar needs from an
+                underlying runtime.</li>
+            </ul>
+          </div>
+        </section>
+        
+        <section>
+          <h2>Fun facts before we go deeper</h2>
+          
+          <ol class="pad20">
+            <li>Scheme's inventor, Guy Steele, had a massive role in
+              the development of the Java language.
+              <ul>
+                <li>Check out <a href="http://www.youtube.com/watch?v=_ahvzDzKdB0">
+                    Growing a Language</a>, it's one of the best programming
+                  talks I've ever heard. 
+                <li>I think this makes Java about
+                  halfway between C and Lisp.</li>
+              </ul>
+            </li>
+            <li>
+              Lars Bak was tech lead on Hotspot, the codename for the
+              JVM, before he worked on the V8 VM for Google.
+            </li>
+            <li>
+              You can generally ignore the 'enterprise' bits that
+              makes everyone recoil, but they're there if you need them.
+            </li>
+          </ol>
+        </section>
+        
+        <section>
+          <h2>Basics of Classes</h2>
+          
+          <ul class="pad20">
+            <li>(static) fields</li>
+            <li>(static) methods</li>
+            <li>constructors</li>
+          </ul>
+
+          <auto>
+public class Hello{
+    public static String thing="Hello World";
+
+    public static void main(String[] args){
+        System.out.println(thing);
+    }
+}
+          </auto>
+
+        </section>
+
+        <section>
+          <auto>
+public class Hello{
+    public String message;
+    // A Constructor
+    public Hello(){
+        message="Hello World";
+    }
+    public void sayHi(){
+        System.out.println(message);
+    }
+    public static void main(String[] args){
+        new Hello().sayHi();
+    }
+}
+          </auto>
+        </section>
+        <section>
+          <auto>
+public class Hello{
+    public String message;
+    // A Constructor
+    public Hello(){
+        message="Hello World";
+    }
+    public void sayHi(){
+        System.out.println(message);
+    }
+    public static void main(String[] args){
+        Hello theHello = new Hello();
+        theHello.sayHi();
+    }
+}
+          </auto>
+        </section>
+
+        <section>
+          <h2>Basics of Classes 2: Inheritance</h2>
+          
+          <ul class="pad20">
+            <li>Classes can only inherit from a single superclass, aka
+            single-inheritance</li>
+            <li>A class 'inherits' the methods and fields of its
+            parent superclass, and its superclass, and its
+            superclass..</li>
+            <li>subclasses can override superclass methods,
+            specifically non-'final' and non-'static' ones</li>
+            <li>Everything extends java.lang.Object</li>
+            <li>C++ allows multiple-inheritance, Java is more
+            restricted, but there's a workaround..</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>java.lang.Object</h2>
+          
+          <ul class="pad20">
+            <li>boolean equals(Object obj);</li>
+            <li>int hashCode();</li>
+            <li>Class getClass();</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>java.lang.Class - an entrypoint into the reflection API</h2>
+          
+          <ul class="pad20">
+            <li>static Class forName(String className);</li>
+            <li>Field[] getFields();</li>
+            <li>Class[] getInterfaces();</li>
+            <li>Method[] getMethods();</li>
+          </ul>
+        </section>
+
+
+        <section>
+          <h2>Basics of Classes 3: Interfaces</h2>
+          
+          <ul class="pad20">
+            <li>Like classes, except no fields or method bodies,
+            only method signatures (specs).</li>
+            <li>A class 'extends' one superclass, can 'implement' many
+            interfaces</li>
+            <li>Interfaces themselves can 'extend' multiple
+            interfaces</li>
+            <li>It's a way to separate the 'interface' from the
+            'implementation'.</li>
+            <li>The distinction of a class vs interface is not visible
+              to code that uses the object.</li>
+          </ul>
+        </section>
+        <section>
+          <auto>
+public interface List&lt;E&gt; extends Collection&lt;E&gt; {
+    // Query Operations
+    int size();
+    boolean isEmpty();
+    boolean contains(Object o);
+    Iterator&lt;E&gt; iterator();
+    Object[] toArray();
+    &lt;T&gt; T[] toArray(T[] a);
+    // Modification Operations
+    boolean add(E e);
+    boolean remove(Object o);
+    // Bulk Modification Operations
+    boolean containsAll(Collection&lt;?&gt; c);
+    boolean addAll(Collection&lt;? extends E&gt; c);
+    boolean addAll(int index, Collection&lt;? extends E&gt; c);
+    boolean removeAll(Collection&lt;?&gt; c);
+    boolean retainAll(Collection&lt;?&gt; c);
+    void clear();
+    // Comparison and hashing
+    boolean equals(Object o);
+    int hashCode();
+    // Positional Access Operations
+    E get(int index);
+    E set(int index, E element);
+    void add(int index, E element);
+    E remove(int index);
+    // Search Operations
+    int indexOf(Object o);
+    int lastIndexOf(Object o);
+    // List Iterators
+    ListIterator&lt;E&gt; listIterator();
+    ListIterator&lt;E&gt; listIterator(int index);
+    // View
+    List&lt;E&gt; subList(int fromIndex, int toIndex);
+}
+          </auto>
+        </section>
+        <section>
+          <h2>Interfaces are (necessary) great!</h2>
+          
+          <ul class="pad20">
+            <li>Share data across multiple languages in a single process!</li>
+            <li>In java, it's now best practice to code them and code
+            _to_ them even if you can't think of a reason to need that
+            separation ahead of time.</li>
+            <li>It's the only practical way to get mock objects in
+            testing, among other things.</li>
+            <li>We don't have method-missing, duck-typing or anything
+            like it out of the box.</li>
+            <li>Java's type system is annoying.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Multithreading..</h2>
+          
+          <ul class="pad20">
+            <li>It's not just about having threads</li>
+            <li>It's more about growing abstractions on top of
+            threads, and composing those abstractions</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Clojure's a bit more natural for this part of the talk..</h2>
+          
+          <div class="pad20">Calling a function
+            <clojure>(function-name param1 param2)</clojure>
+          </div>
+          <div class="pad20">Setting a var(iable)
+            <auto>(def a 4)</auto>
+          </div>
+        </section>
+
+        <section>
+          <h2>Clojure..</h2>
+          <ul class="pad20">
+            <li>Built as a relatively thin layer on top of java
+            reflection and standard java classes and interfaces</li>
+            <li>Relatively low overhead</li>
+            <li>Built for concurrency from the ground up</li>
+            <li>All data structures implement standard java
+            interfaces like java.util.List, java.util.Map</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Concurrency abstractions.. futures</h2>
+
+          'future' returns an object that represents the result of a
+          computation in another thread.  Use 'deref' to obtain the result.
+
+          <clojure>
+;; returns immediately, calls 'long-running-function' in another thread
+(def f (future (long-running-function)))
+
+;; keep doing work on the current thread
+(do-some-thing)
+
+;; come back and grab the result, blocks if it's not yet finished
+(deref f)
+          </clojure>
+          
+        </section>
+
+        <section>
+          <h2>Promises</h2>
+
+          'promise' returns an object that represents the result of a
+          computation in another thread, but anything can 'deliver' to
+          it.  Use 'deref' to obtain the result.
+
+          <clojure>
+;; initialize a promise
+(def p (promise))
+
+;; throw it over the fence
+(send-my-promise-to-some-process p)
+
+;; keep doing work on the current thread
+(do-some-thing)
+
+;; come back and grab the result, blocks if it's not yet delivered
+(deref p)
+          </clojure>
+          
+        </section>
+
+
+        <section>
+          <h3>Demo Time</h3>
+
+        </section>
+        <section>
+          <h3>Thanks for coming!</h3>
+          <hr/>
+          <div>
+            <p>Gary Trakhman</p>
+            <p>
+              <a href="https://twitter.com/gtrakGT">@gtrakGT</a>
+            </p>
+            <p>
+              Software Engineer at <a href="http://www.revelytix.com/">Revelytix, Inc.</a>
+            </p>
+          </div>
+        </section>
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+    <script src="js/angular.min.js"></script>
+
+
+    <script src="js/slideshow.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+      // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+      });
+
+    </script>
+
+  </body>
+</html>
