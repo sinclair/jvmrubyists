@@ -1,6 +1,10 @@
-(ns jvmrubyists.core)
+(ns jvmrubyists.core
+  (:import [org.jruby.embed ScriptingContainer LocalVariableBehavior LocalContextScope]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(def c (ScriptingContainer. LocalContextScope/SINGLETHREAD LocalVariableBehavior/PERSISTENT))
+
+(defn run
+  [s]
+  (. c runScriptlet s))
+
+(run "Proc.new {|x| x+1}")
