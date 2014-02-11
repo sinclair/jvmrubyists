@@ -54,17 +54,23 @@ al
 (class the-vector)
 (types the-vector)
 
+;; disassemble something
+
 (methods clojure.lang.PersistentVector)
 ;;; Concurrency
 (def input (vec (range 10000000)))
 
+;; talk about: benchmark, reduce/inject, reducers/fork-join
 (benchmark (reduce + input))
 
 (benchmark (reducers/reduce + input))
 
+;; talk about: fold vs reduce, knobs
 (benchmark (reducers/fold 1024 + + input))
 ;; also works: (benchmark (reducers/fold + input))
 
+;; talk about what 'future' does, safe-println, evens/odds, what to
+;; expect in the output
 
 ;;; Out of order execution
 (time (let [evens (future
@@ -96,7 +102,12 @@ al
   (to-ruby [x] x)
   (from-ruby [x] (.getLongValue x)))
 
+;; performance-sensitive jruby code :-)
+
+
 (def rb+ (run "Proc.new {|x,y| x+y}"))
+
+;; any way to disassemble this?
 
 (defn ruby-add
   ([] 0)
@@ -106,11 +117,16 @@ al
                 (into-array [(to-ruby a) (to-ruby b)]))
          from-ruby)))
 
-(benchmark (reduce ruby-add 0 (range 10)))
-(benchmark (reduce + 0 (range 10)))
+;; check results
+(reduce ruby-add 0 (range 1000))
+(reduce + 0 (range 1000))
+
+(benchmark (reduce ruby-add 0 (range 1000)))
+(benchmark (reduce + 0 (range 1000)))
+
 
 (benchmark (reducers/fold 1024 ruby-add ruby-add input))
-
+;;; Show off JVisualVM
 
 
 )
