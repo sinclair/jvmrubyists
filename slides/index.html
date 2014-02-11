@@ -89,8 +89,9 @@
           facilities makes the JVM...</small>
         </section>
         <section>
-          <h2>An Excellent Language Host (did I mention I'm not a fan of java?)</h2>
+          <h2>An Excellent Language Host</h2>
           <ol>
+            <li>Java.. if you must</li>
             <li>Clojure</li>
             <li>Scala</li>
             <li>JRuby</li>
@@ -108,13 +109,11 @@
         </section>
 
         <section>
-          <h2>An aside... how many runtime virtual machines actually need to exist?</h2>
-          
+          <h2>An aside... why do we need more than a handful of VMs?</h2>
           <ol class="pad20">
             <li>JS... runs everywhere</li>
-            <li>Java.. been around for a really long time</li>
+            <li>Java.. around for a long time</li>
           </ol>
-          <div class="pad40">
             <ul class="pad20">
               <li>We don't need 500 garbage collectors when we can reuse a
                 good one..</li>
@@ -124,7 +123,6 @@
                 similar to each other, and have similar needs from an
                 underlying runtime.</li>
             </ul>
-          </div>
         </section>
         
         <section>
@@ -191,25 +189,6 @@ public class Hello{
           </auto>
         </section>
         <section>
-          <auto>
-public class Hello{
-    public String message;
-    // A Constructor
-    public Hello(){
-        message="Hello World";
-    }
-    public void sayHi(){
-        System.out.println(message);
-    }
-    public static void main(String[] args){
-        Hello theHello = new Hello();
-        theHello.sayHi();
-    }
-}
-          </auto>
-        </section>
-
-        <section>
           <h2>Basics of Classes 2: Inheritance</h2>
           
           <ul class="pad20">
@@ -266,7 +245,7 @@ public class Hello{
         </section>
         <section>
           <auto>
-public interface List&lt;E&gt; extends Collection&lt;E&gt; {
+public interface java.util.List&lt;E&gt; extends java.util.Collection&lt;E&gt; {
     // Query Operations
     int size();
     boolean isEmpty();
@@ -325,7 +304,11 @@ public interface List&lt;E&gt; extends Collection&lt;E&gt; {
           <ul class="pad20">
             <li>It's not just about having threads</li>
             <li>It's more about growing abstractions on top of
-            threads, and composing those abstractions</li>
+              threads, and composing those abstractions</li>
+            <li>It's built in to our cpus, we should be able to
+              take advantage of it</li>
+            <li>Sometimes the right answer is to write something small
+              instead of deploying/configuring/testing some pre-packaged database/queue/framework/etc..</li>
           </ul>
         </section>
 
@@ -343,12 +326,11 @@ public interface List&lt;E&gt; extends Collection&lt;E&gt; {
         <section>
           <h2>Clojure..</h2>
           <ul class="pad20">
-            <li>Built as a relatively thin layer on top of java
-            reflection and standard java classes and interfaces</li>
+            <li>Built as a relatively thin layer on top of java, reflection, and standard java classes and interfaces</li>
             <li>Relatively low overhead</li>
             <li>Built for concurrency from the ground up</li>
             <li>All data structures implement standard java
-            interfaces like java.util.List, java.util.Map</li>
+              interfaces like java.util.List, java.util.Map</li>
           </ul>
         </section>
 
@@ -393,7 +375,18 @@ public interface List&lt;E&gt; extends Collection&lt;E&gt; {
           </clojure>
           
         </section>
-
+        <section>
+          <h2>Moar!</h2>
+          <ul class="pad20">
+            <li>Executors</li>
+            <li>Thread Pools</li>
+            <li>Fork/Join</li>
+            <li>Hadoop/Mapreduce</li>
+            <li>Storm</li>
+            <li>Akka (Actors and distributed computation)</li>
+            <li>clojure's core.async (like golang's CSP channels and goroutines)</li>
+          </ul>
+        </section>
 
         <section>
           <h3>Demo Time</h3>

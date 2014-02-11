@@ -8,4 +8,6 @@
                  [org.clojure/tools.nrepl "0.2.3"]]
 
   :repl-options {:nrepl-middleware [jvmrubyists.piggieback/wrap-jruby-repl]}
+
+  :plugins [[lein-nodisassemble "0.1.2"]]
   )
